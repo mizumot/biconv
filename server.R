@@ -9,18 +9,17 @@ shinyServer(function(input, output) {
     
     check <- reactive({
         if (input$colname == 0) {
-            x <- read.table(text=input$text, sep="\t")
+            x <- read.table(text=input$text, sep="", na.strings=c("","NA","."))
             x <- as.matrix(x)
             
-            ans <- read.delim(text=input$anskey, sep="\t", fill=TRUE, header=FALSE, stringsAsFactors=FALSE)
+            ans <- read.delim(text=input$anskey, sep="", fill=TRUE, header=FALSE, stringsAsFactors=FALSE)
             ans <- as.character(ans)
             dat <- score(x, ans, output.scored=TRUE)$scored
             
         } else {
-            
-            x <- read.csv(text=input$text, sep="\t")
-            
-            ans <- read.delim(text=input$anskey, sep="\t", fill=TRUE, header=FALSE, stringsAsFactors=FALSE)
+            x <- read.table(text=input$text, header = TRUE, sep="", na.strings=c("","NA","."))
+
+            ans <- read.delim(text=input$anskey, sep="", fill=TRUE, header=FALSE, stringsAsFactors=FALSE)
             ans <- as.character(ans)
             
             dat <- score(x, ans, output.scored=TRUE)$scored
@@ -28,13 +27,6 @@ shinyServer(function(input, output) {
     })
     
     
-    
-
-
-
-
-
-
 
     output$check <- renderTable({
         head(check(), n = 10)
